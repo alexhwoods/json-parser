@@ -1,0 +1,210 @@
+package json
+
+import (
+	"errors"
+	"strconv"
+	"strings"
+)
+
+/*
+ * A token is a roughly opaque string
+ * that corresponds to a JSON key or value
+ */
+type Token string
+
+func (t Token) String() string {
+	return string(t)
+}
+
+func (t Token) FirstChar() rune {
+	return rune(t[0])
+}
+
+func (t Token) LastChar() rune {
+	return rune(t[len(t)-1])
+}
+
+func NewToken(input string) Token {
+	return Token(input)
+}
+
+type ValueToken map[string]*ValueToken
+
+func tokenizeObject(input string) (interface{}, error) {
+	start, end := 0, len(input)-1
+
+	if input[start] != '{' && input[end] != '}' {
+		return Token(input), nil
+	}
+
+	if input[start] != '[' && input[end] != ']' {
+		return Token(input), nil
+	}
+
+	// handle object
+	// e.g. {"key": "value"}
+
+	// handle array
+
+	return nil, nil
+}
+
+func findObjectEnd(input string) int {
+	return findNext(input, '}')
+}
+
+func findNext(input string, c rune) int {
+	for i, r := range input {
+		if r == c {
+			return i
+		}
+	}
+
+	return -1
+}
+
+const JSON_WHITESPACE = " \t\n"
+const JSON_SYNTAX = "{}[],:"
+const JSON_QUOTE = '"'
+const JSON_COMMA = ','
+
+func lex_string(input string) (string, string, bool) {
+	jsonString := ""
+	s := input
+
+	if len(s) == 0 {
+		return "", "", false
+	}
+
+	if input[0] != JSON_QUOTE {
+		return "", input, false
+	} else {
+		s = s[1:]
+	}
+
+	for _, c := range s {
+		if c == JSON_QUOTE {
+			s = s[len(jsonString)+1:]
+			return jsonString, s, true
+		}
+
+		jsonString += string(c)
+	}
+
+	panic("unreachable")
+}
+
+const NUMBER_SYNTAX = "-0123456789."
+const NUMBER_DOT = '.'
+
+func lex_number(input string) (interface{}, string, bool) {
+	numberString := ""
+	s := input
+
+	if len(s) == 0 {
+		return "", "", false
+	}
+
+	for _, c := range s {
+		if c == JSON_COMMA {
+			break
+		}
+
+		if !strings.ContainsRune(NUMBER_SYNTAX, c) && len(numberString) == 0 {
+			return "", input, false
+		} else if !strings.ContainsRune(NUMBER_SYNTAX, c) {
+			break
+		} else {
+			numberString += string(c)
+		}
+	}
+
+	s = s[len(numberString):]
+
+	if strings.ContainsRune(numberString, NUMBER_DOT) {
+		value, err := strconv.ParseFloat(numberString, 64)
+
+		if err != nil {
+			return "", input, false
+		}
+
+		return value, s, true
+	}
+
+	value, err := strconv.Atoi(numberString)
+
+	if err != nil {
+		return "", input, false
+	}
+
+	return value, s, true
+}
+
+func lex_boolean(input string) (interface{}, string, bool) {
+	if strings.HasPrefix(input, "true") {
+		return true, input[4:], true
+	}
+
+	if strings.HasPrefix(input, "false") {
+		return false, input[5:], true
+	}
+
+	return "", input, false
+}
+
+func lex_null(input string) (interface{}, string, bool) {
+	if strings.HasPrefix(input, "null") {
+		return nil, input[4:], true
+	}
+
+	return "", input, false
+}
+
+func lex(input string) ([]interface{}, error) {
+	tokens := make([]interface{}, 0)
+
+	s := input
+
+	for len(s) > 0 {
+		jsonString, remainder, success := lex_string(s)
+		if success {
+			tokens = append(tokens, jsonString)
+			s = remainder
+			continue
+		}
+
+		jsonNumber, remainder, success := lex_number(s)
+		if success {
+			tokens = append(tokens, jsonNumber)
+			s = remainder
+			continue
+		}
+
+		jsonBoolean, remainder, success := lex_boolean(s)
+		if success {
+			tokens = append(tokens, jsonBoolean)
+			s = remainder
+			continue
+		}
+
+		jsonNull, remainder, success := lex_null(s)
+		if success {
+			tokens = append(tokens, jsonNull)
+			s = remainder
+			continue
+		}
+
+		c := rune(s[0])
+
+		if strings.ContainsRune(JSON_WHITESPACE, c) {
+			s = s[1:]
+		} else if strings.ContainsRune(JSON_SYNTAX, c) {
+			tokens = append(tokens, c)
+			s = s[1:]
+		} else {
+			return nil, errors.New("Unexpected character: " + string(c))
+		}
+	}
+
+	return tokens, nil
+}
