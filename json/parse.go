@@ -29,7 +29,7 @@ func ParseObject(tokens []interface{}) (map[string]interface{}, []interface{}, e
 			return nil, nil, errors.New("expected string key")
 		}
 
-		if tokens[0] != ":" {
+		if tokens[0] != ':' {
 			return nil, nil, errors.New("expected colon")
 		}
 
