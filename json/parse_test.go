@@ -14,11 +14,11 @@ func TestParseObject(t *testing.T) {
 	}{
 
 		// corresponds to {"foo": 5}
-		{"Basic JSON Object", []interface{}{'{', "foo", ":", 5, '}'}, map[string]interface{}{"foo": 5}},
+		{"Basic JSON Object", []interface{}{'{', "foo", ':', 5, '}'}, map[string]interface{}{"foo": 5}},
 		// corresponds to {}
 		{"Empty JSON Object", []interface{}{'{', '}'}, map[string]interface{}{}},
 		// // corresponds to {"foo": {"bar": 5}}
-		{"Nested JSON Object 2", []interface{}{'{', "foo", ":", map[string]interface{}{"bar": 5}, '}'}, map[string]interface{}{"foo": map[string]interface{}{"bar": 5}}},
+		{"Nested JSON Object 2", []interface{}{'{', "foo", ':', map[string]interface{}{"bar": 5}, '}'}, map[string]interface{}{"foo": map[string]interface{}{"bar": 5}}},
 	}
 
 	for _, tc := range tests {
@@ -77,11 +77,11 @@ func TestParse(t *testing.T) {
 		expectedResult interface{}
 	}{
 		// corresponds to {"foo": 5}
-		{"Basic JSON Object", []interface{}{'{', "foo", ":", 5, '}'}, map[string]interface{}{"foo": 5}},
+		{"Basic JSON Object", []interface{}{'{', "foo", ':', 5, '}'}, map[string]interface{}{"foo": 5}},
 		// corresponds to {}
 		{"Empty JSON Object Simple", []interface{}{'{', '}'}, map[string]interface{}{}},
 		// corresponds to {"foo": {"bar": 5}}
-		{"Nested JSON Object Complex", []interface{}{'{', "foo", ":", map[string]interface{}{"bar": 5}, '}'}, map[string]interface{}{"foo": map[string]interface{}{"bar": 5}}},
+		{"Nested JSON Object Complex", []interface{}{'{', "foo", ':', map[string]interface{}{"bar": 5}, '}'}, map[string]interface{}{"foo": map[string]interface{}{"bar": 5}}},
 		// corresponds to [1,2,3]
 		{"Basic JSON Array", []interface{}{'[', 1, ',', 2, ',', 3, ']'}, []interface{}{1, 2, 3}},
 		// corresponds to []
@@ -91,7 +91,7 @@ func TestParse(t *testing.T) {
 		// corresponds to [{"foo": 5}]
 		{"Array with Object", []interface{}{'[', map[string]interface{}{"foo": 5}, ']'}, []interface{}{map[string]interface{}{"foo": 5}}},
 		// corresponds to {"foo": [1, 2, {"bar": 2}]
-		{"Nested JSON Object", []interface{}{'{', "foo", ":", []interface{}{1, 2, map[string]interface{}{"bar": 2}}, '}'}, map[string]interface{}{"foo": []interface{}{1, 2, map[string]interface{}{"bar": 2}}}},
+		{"Nested JSON Object", []interface{}{'{', "foo", ':', []interface{}{1, 2, map[string]interface{}{"bar": 2}}, '}'}, map[string]interface{}{"foo": []interface{}{1, 2, map[string]interface{}{"bar": 2}}}},
 	}
 
 	for _, tc := range tests {
