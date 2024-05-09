@@ -24,7 +24,7 @@ func TestLexString(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			value, remainder, isString := lex_string(tc.input)
+			value, remainder, isString := LexString(tc.input)
 			if isString != tc.expectSuccess {
 				t.Errorf("Expected success flag for %s to be %v, got %v", tc.name, tc.expectSuccess, isString)
 			}
@@ -57,7 +57,7 @@ func TestLexNumber(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			value, remainder, success := lex_number(tc.input)
+			value, remainder, success := LexNumber(tc.input)
 			if success != tc.expectSuccess {
 				t.Errorf("Expected success flag for %s to be %v, got %v", tc.name, tc.expectSuccess, success)
 			}
@@ -89,7 +89,7 @@ func TestLexBoolean(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			value, remainder, success := lex_boolean(tc.input)
+			value, remainder, success := LexBoolean(tc.input)
 			if success != tc.expectSuccess {
 				t.Errorf("Expected success flag for %s to be %v, got %v", tc.name, tc.expectSuccess, success)
 			}
@@ -118,7 +118,7 @@ func TestLexNull(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			value, remainder, success := lex_null(tc.input)
+			value, remainder, success := LexNull(tc.input)
 			if success != tc.expectSuccess {
 				t.Errorf("Expected success flag for %s to be %v, got %v", tc.name, tc.expectSuccess, success)
 			}

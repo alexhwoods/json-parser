@@ -11,7 +11,7 @@ const JSON_SYNTAX = "{}[],:"
 const JSON_QUOTE = '"'
 const JSON_COMMA = ','
 
-func lex_string(input string) (string, string, bool) {
+func LexString(input string) (string, string, bool) {
 	jsonString := ""
 	s := input
 
@@ -40,7 +40,7 @@ func lex_string(input string) (string, string, bool) {
 const NUMBER_SYNTAX = "-0123456789."
 const NUMBER_DOT = '.'
 
-func lex_number(input string) (interface{}, string, bool) {
+func LexNumber(input string) (interface{}, string, bool) {
 	numberString := ""
 	s := input
 
@@ -83,7 +83,7 @@ func lex_number(input string) (interface{}, string, bool) {
 	return value, s, true
 }
 
-func lex_boolean(input string) (interface{}, string, bool) {
+func LexBoolean(input string) (interface{}, string, bool) {
 	if strings.HasPrefix(input, "true") {
 		return true, input[4:], true
 	}
@@ -95,7 +95,7 @@ func lex_boolean(input string) (interface{}, string, bool) {
 	return "", input, false
 }
 
-func lex_null(input string) (interface{}, string, bool) {
+func LexNull(input string) (interface{}, string, bool) {
 	if strings.HasPrefix(input, "null") {
 		return nil, input[4:], true
 	}
@@ -109,28 +109,28 @@ func lex(input string) ([]interface{}, error) {
 	s := input
 
 	for len(s) > 0 {
-		jsonString, remainder, success := lex_string(s)
+		jsonString, remainder, success := LexString(s)
 		if success {
 			tokens = append(tokens, jsonString)
 			s = remainder
 			continue
 		}
 
-		jsonNumber, remainder, success := lex_number(s)
+		jsonNumber, remainder, success := LexNumber(s)
 		if success {
 			tokens = append(tokens, jsonNumber)
 			s = remainder
 			continue
 		}
 
-		jsonBoolean, remainder, success := lex_boolean(s)
+		jsonBoolean, remainder, success := LexBoolean(s)
 		if success {
 			tokens = append(tokens, jsonBoolean)
 			s = remainder
 			continue
 		}
 
-		jsonNull, remainder, success := lex_null(s)
+		jsonNull, remainder, success := LexNull(s)
 		if success {
 			tokens = append(tokens, jsonNull)
 			s = remainder
