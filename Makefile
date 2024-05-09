@@ -1,0 +1,3 @@
+test:
+	@echo "Running tests..."
+	gow test ./...

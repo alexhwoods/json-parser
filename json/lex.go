@@ -6,63 +6,6 @@ import (
 	"strings"
 )
 
-/*
- * A token is a roughly opaque string
- * that corresponds to a JSON key or value
- */
-type Token string
-
-func (t Token) String() string {
-	return string(t)
-}
-
-func (t Token) FirstChar() rune {
-	return rune(t[0])
-}
-
-func (t Token) LastChar() rune {
-	return rune(t[len(t)-1])
-}
-
-func NewToken(input string) Token {
-	return Token(input)
-}
-
-type ValueToken map[string]*ValueToken
-
-func tokenizeObject(input string) (interface{}, error) {
-	start, end := 0, len(input)-1
-
-	if input[start] != '{' && input[end] != '}' {
-		return Token(input), nil
-	}
-
-	if input[start] != '[' && input[end] != ']' {
-		return Token(input), nil
-	}
-
-	// handle object
-	// e.g. {"key": "value"}
-
-	// handle array
-
-	return nil, nil
-}
-
-func findObjectEnd(input string) int {
-	return findNext(input, '}')
-}
-
-func findNext(input string, c rune) int {
-	for i, r := range input {
-		if r == c {
-			return i
-		}
-	}
-
-	return -1
-}
-
 const JSON_WHITESPACE = " \t\n"
 const JSON_SYNTAX = "{}[],:"
 const JSON_QUOTE = '"'
