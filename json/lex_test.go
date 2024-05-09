@@ -147,7 +147,7 @@ func TestLex(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			tokens, err := lex(tc.input)
+			tokens, err := Lex(tc.input)
 
 			if err != nil {
 				t.Errorf("Expected lex to return no error, but got %v", err)

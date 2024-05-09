@@ -103,7 +103,7 @@ func LexNull(input string) (interface{}, string, bool) {
 	return "", input, false
 }
 
-func lex(input string) ([]interface{}, error) {
+func Lex(input string) ([]interface{}, error) {
 	tokens := make([]interface{}, 0)
 
 	s := input
