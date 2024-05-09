@@ -10,6 +10,12 @@ func ConvertSliceToString(slice []interface{}) string {
 			result += string(v)
 		case int:
 			result += strconv.Itoa(v)
+		case string:
+			result += v
+		case bool:
+			result += strconv.FormatBool(v)
+		case nil:
+			result += "null"
 		}
 	}
 	return result
